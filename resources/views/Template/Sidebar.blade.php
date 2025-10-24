@@ -32,6 +32,19 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-header">REKAMEDIS</li>
+                <li class="nav-item">
+                    <a href="{{ route('indexpendaftaran')}}" class="nav-link @if($menu == 'pendaftaran') active @endif">
+                        <i class="nav-icon bi bi-file-bar-graph-fill"></i>
+                        <p>Pendaftaran</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('indexdatauser')}}" class="nav-link @if($menu == 'masterpasien') active @endif">
+                        <i class="nav-icon bi bi-file-bar-graph-fill"></i>
+                        <p>Master Pasien</p>
+                    </a>
+                </li>
                 <li class="nav-header">DATA MASTER</li>
                 <li class="nav-item">
                     <a href="{{ route('indexdatauser')}}" class="nav-link @if($menu == 'datauser') active @endif">

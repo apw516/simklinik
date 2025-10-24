@@ -17,8 +17,12 @@
 </div>
 <div class="app-content">
     <div class="container-fluid">
-        {{-- <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modaltambahunit"><i
-                class="bi bi-folder-plus mr-1 ml-1"></i> Tambah Unit</button> --}}
+        <div class="btn-group mb-3" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-primary">Data Provinsi</button>
+            <button type="button" class="btn btn-primary">Data Kabupaten</button>
+            <button type="button" class="btn btn-primary">Data Kecamatan</button>
+            <button type="button" class="btn btn-primary">Data Desa</button>
+        </div>
         <div class="v_table_user">
             <div class="card">
                 <div class="card-header">Tabel Provinsi</div>
@@ -30,7 +34,8 @@
                             <th>BPS CODE</th>
                             <th>PARENT CODE</th>
                             <th>NAME</th>
-                            <th></th>
+                            <th class="text-center">TAMBAH DATA</th>
+                            {{-- <th class="text-center">LIHAT DATA</th> --}}
                         </thead>
                         <tbody>
                             @foreach ($mt_provinsi as $d )
@@ -45,6 +50,11 @@
                                     <button idprov="{{ $d->bps_code }}" class="btn btn-success btn-sm getkecamatan" data-bs-toggle="modal" data-bs-target="#modaladdkecamatan"><i class="bi bi-plus"></i> Kecamatan</button>
                                     <button idprov="{{ $d->bps_code }}" class="btn btn-success btn-sm getdesa" data-bs-toggle="modal" data-bs-target="#modaladddesa"><i class="bi bi-plus"></i> Desa</button>
                                 </td>
+                                {{-- <td class="text-center">
+                                    <button idprov="{{ $d->code }}" class="btn btn-info btn-sm downloadkabupaten"><i class="bi bi-eye mr-1"></i> Kab / Kota</button>
+                                <button idprov="{{ $d->bps_code }}" class="btn btn-info btn-sm getkecamatan" data-bs-toggle="modal" data-bs-target="#modaladdkecamatan"><i class="bi bi-eye mr-1"></i> Kecamatan</button>
+                                <button idprov="{{ $d->bps_code }}" class="btn btn-info btn-sm getdesa" data-bs-toggle="modal" data-bs-target="#modaladddesa"><i class="bi bi-eye mr-1"></i> Desa</button>
+                                </td> --}}
                             </tr>
                             @endforeach
                         </tbody>
@@ -182,6 +192,7 @@
             }
         });
     });
+
     function downloadkecamatan() {
         kodekabupaten = $('#kodekabupaten').val()
         spinner = $('#loader')
@@ -224,6 +235,7 @@
             }
         });
     }
+
     function downloaddesa() {
         kodekecamatan = $('#kodekecamatan').val()
         spinner = $('#loader')
