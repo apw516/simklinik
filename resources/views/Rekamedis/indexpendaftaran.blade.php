@@ -22,28 +22,28 @@
                 <div class="col-md-2">
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">NIK</label>
-                        <input type="email" class="form-control" id="nik" aria-describedby="emailHelp"
+                        <input type="text" class="form-control" id="nik" aria-describedby="emailHelp"
                             placeholder="Masukan NIK Pasien ...">
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Nomor RM</label>
-                        <input type="email" class="form-control" id="rm" aria-describedby="emailHelp"
+                        <input type="text" class="form-control" id="rm" aria-describedby="emailHelp"
                             placeholder="Masukan Nomor RM Pasien ...">
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Nama Pasien</label>
-                        <input type="email" class="form-control" id="nama" aria-describedby="emailHelp"
+                        <input type="text" class="form-control" id="nama" aria-describedby="emailHelp"
                             placeholder="Masukan Nama Pasien Pasien ...">
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Alamat</label>
-                        <input type="email" class="form-control" id="alamat" aria-describedby="emailHelp"
+                        <input type="text" class="form-control" id="alamat" aria-describedby="emailHelp"
                             placeholder="Masukan Alamat Pasien ...">
                     </div>
                 </div>
@@ -59,7 +59,7 @@
             <div class="card mt-4">
                 <div class="card-header">Data Pasien</div>
                 <div class="card-body">
-
+                    <div class="v_tabel_pasien"></div>
                 </div>
             </div>
         </div>
@@ -68,7 +68,7 @@
             <div class="card mt-3">
                 <div class="card-header">Form Pasien Baru</div>
                 <div class="card-body">
-                    <form class="formpasienbaru">
+                    <form class="formpasienbaru" id="formpasienbaru">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="mb-2">
@@ -118,44 +118,37 @@
                                     <div class="col-md-3">
                                         <div class="mb-2">
                                             <label for="exampleInputEmail1" class="form-label">Provinsi</label>
-                                            <select class="form-select" aria-label="Default select example"
-                                                id="provinsi" name="provinsi" onchange="get_kabupaten()">
-                                                <option>Silahkan Pilih</option>
-                                                @foreach ($mt_provinsi as $D )
-                                                <option value="{{ $D->code }}">{{ $D->name }}</option>
-                                                @endforeach
-                                            </select>
+                                            <input type="text" class="form-control" id="provinsi" name="provinsi"
+                                                aria-describedby="emailHelp" placeholder="Pilih provinsi ....">
+                                            <input hidden type="text" class="form-control" id="kodeprovinsi" name="kodeprovinsi"
+                                                aria-describedby="emailHelp" placeholder="Masukan nomor identitas pasien ....">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="mb-2">
                                             <label for="exampleInputEmail1" class="form-label">Kabupaten</label>
-                                                <div class="v_list_kab">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option>Silahkan Pilih</option>
-                                                    </select>
-                                                </div>                                    
-                                            </select>
+                                            <input type="text" class="form-control" id="kabupaten" name="kabupaten"
+                                                aria-describedby="emailHelp" placeholder="Pilih kabupaten ....">
+                                            <input hidden type="text" class="form-control" id="kodekabupaten" name="kodekabupaten"
+                                                aria-describedby="emailHelp" placeholder="Masukan nomor identitas pasien ....">                         
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="mb-2">
                                             <label for="exampleInputEmail1" class="form-label">Kecamatan</label>
-                                             <div class="v_list_kec">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option>Silahkan Pilih</option>
-                                                    </select>
-                                            </div> 
+                                            <input type="text" class="form-control" id="kecamatan" name="kecamatan"
+                                                aria-describedby="emailHelp" placeholder="Pilih kecamatan ....">
+                                            <input hidden type="text" class="form-control" id="kodekecamatan" name="kodekecamatan"
+                                                aria-describedby="emailHelp" placeholder="Masukan nomor identitas pasien ....">      
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="mb-2">
                                             <label for="exampleInputEmail1" class="form-label">Desa</label>
-                                             <div class="v_list_desa">
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option>Silahkan Pilih</option>
-                                                    </select>
-                                            </div> 
+                                             <input type="text" class="form-control" id="desa" name="desa"
+                                                aria-describedby="emailHelp" placeholder="Pilih desa ....">
+                                            <input hidden type="text" class="form-control" id="kodedesa" name="kodedesa"
+                                                aria-describedby="emailHelp" placeholder="Masukan nomor identitas pasien ...."> 
                                         </div>
                                     </div>
                                 </div>
@@ -183,6 +176,18 @@
     </div>
 </div>
 <script>
+    $('#rm').on('keypress', function(event) {
+        caripasien()
+    });
+    $('#nama').on('keypress', function(event) {
+        caripasien()
+    });
+    $('#nik').on('keypress', function(event) {
+        caripasien()
+    });
+    $('#alamat').on('keypress', function(event) {
+        caripasien()
+    });
     function simpandatapasienbaru() {
         Swal.fire({
             title: "Anda yakin ?"
@@ -238,6 +243,8 @@
                         footer: ''
                     })
                     location.reload()
+                    const myForm = document.getElementById('formpasienbaru');
+                    myForm.reset();
                 }
             }
         });
@@ -247,6 +254,20 @@
         rm = $('#rm').val()
         nama = $('#nama').val()
         alamat = $('#alamat').val()
+            spinner = $('#loader')
+            spinner.show();
+            $.ajax({
+                type: 'post'
+                , data: {
+                    _token: "{{ csrf_token() }}"
+                    , rm,nama,alamat,nik
+                }
+                , url: '<?= route('caripasien') ?>'
+                , success: function(response) {
+                    spinner.hide();
+                    $('.v_tabel_pasien').html(response);
+                }
+            });
     }
     function formpasienbaru() {
         $('.v_1').attr('hidden', true)
@@ -256,56 +277,80 @@
         $('.v_2').attr('hidden', true)
         $('.v_1').removeAttr('hidden', true)
     }
-    function get_kabupaten(){
-        prov = $('#provinsi').val()
-        spinner = $('#loader')
-        spinner.show();
-        $.ajax({
-            type: 'post'
-            , data: {
-                _token: "{{ csrf_token() }}"
-                , prov
-            }
-            , url: '<?= route('ambil_kabupaten_rekamedis') ?>'
-            , success: function(response) {
-                spinner.hide();
-                $('.v_list_kab').html(response);
+    $(document).ready(function() {
+         caripasien()
+        $("#provinsi").autocomplete({
+            source: '<?= route('cariprovinsi') ?>', // Laravel route for autocomplete
+            minLength: 2,
+            select: function(event, ui) {
+                $("#provinsi").val(ui.item.label);
+                $("#kodeprovinsi").val(ui.item.value);
+                return false; // Prevent default action (setting input value to item.value)
             }
         });
-    }
-    function get_kecamatan(){
-        kab = $('#kabupaten').val()
-        spinner = $('#loader')
-        spinner.show();
-        $.ajax({
-            type: 'post'
-            , data: {
-                _token: "{{ csrf_token() }}"
-                , kab
-            }
-            , url: '<?= route('ambil_kecamatan_rekamedis') ?>'
-            , success: function(response) {
-                spinner.hide();
-                $('.v_list_kec').html(response);
-            }
-        });
-    }
-    function get_desa(){
-        kec = $('#kecamatan').val()
-        spinner = $('#loader')
-        spinner.show();
-        $.ajax({
-            type: 'post'
-            , data: {
-                _token: "{{ csrf_token() }}"
-                , kec
-            }
-            , url: '<?= route('ambil_desa_rekamedis') ?>'
-            , success: function(response) {
-                spinner.hide();
-                $('.v_list_desa').html(response);
+        $("#kabupaten").autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: "<?= route('carikabupaten') ?>", // Your Laravel route
+                    dataType: "json",
+                    data: {
+                        term: request.term,
+                        kodeprovinsi: $("#kodeprovinsi").val(), // Value from another input field
+                    },
+                    success: function(data) {
+                        response(data); // Pass the received data to the autocomplete
+                    }
+                });
+            },
+            minLength: 2,
+            select: function(event, ui) {
+                $("#kabupaten").val(ui.item.label);
+                $("#kodekabupaten").val(ui.item.value);
+                return false; // Prevent default action (setting input value to item.value)
             }
         });
-    }
+        $("#kecamatan").autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: "<?= route('carikecamatan') ?>", // Your Laravel route
+                    dataType: "json",
+                    data: {
+                        term: request.term,
+                        kodekabupaten: $("#kodekabupaten").val(), // Value from another input field
+                    },
+                    success: function(data) {
+                        response(data); // Pass the received data to the autocomplete
+                    }
+                });
+            },
+            minLength: 2,
+            select: function(event, ui) {
+                $("#kecamatan").val(ui.item.label);
+                $("#kodekecamatan").val(ui.item.value);
+                return false; // Prevent default action (setting input value to item.value)
+            }
+        });
+        $("#desa").autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: "<?= route('caridesa') ?>", // Your Laravel route
+                    dataType: "json",
+                    data: {
+                        term: request.term,
+                        kodekecamatan: $("#kodekecamatan").val(), // Value from another input field
+                    },
+                    success: function(data) {
+                        response(data); // Pass the received data to the autocomplete
+                    }
+                });
+            },
+            minLength: 2,
+            select: function(event, ui) {
+                $("#desa").val(ui.item.label);
+                $("#kodedesa").val(ui.item.value);
+                return false; // Prevent default action (setting input value to item.value)
+            }
+        });
+    });
 </script>
 @endsection
