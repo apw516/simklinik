@@ -10,23 +10,23 @@
     </thead>
     <tbody>
         @foreach ($pasien as $p )
-            <tr>
-                <td>{{ $p->no_rm}}</td>
-                <td>{{ $p->NIK}}</td>
-                <td>{{ $p->nama_pasien}}</td>
-                <td>{{ $p->jenis_kelamin}}</td>
-                <td>{{ $p->TGL_LAHIR}}</td>
-                <td>{{ $p->desa}}, {{ $p->alamat }}</td>
-                <td>
-                    <button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button>
-                    <button class="btn btn-success"><i class="bi bi-box-arrow-in-right"></i></button>
-                </td>
-            </tr>
+        <tr>
+            <td>{{ $p->no_rm}}</td>
+            <td>{{ $p->NIK}}</td>
+            <td>{{ $p->nama_pasien}}</td>
+            <td>{{ $p->jenis_kelamin}}</td>
+            <td>{{ $p->TGL_LAHIR}}</td>
+            <td>{{ $p->desa}}, {{ $p->alamat }}</td>
+            <td>
+                <button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button>
+                <button rm="{{ $p->no_rm }}" class="btn btn-success pendaftaran"><i class="bi bi-box-arrow-in-right"></i></button>
+            </td>
+        </tr>
         @endforeach
     </tbody>
 </table>
 <script>
-      $(function() {
+    $(function() {
         $("#tabelpasien").DataTable({
             "responsive": true
             , "lengthChange": false
@@ -36,4 +36,24 @@
             , "ordering": false
         , })
     });
+    $(".pendaftaran").on('click', function(event) {
+        rm = $(this).attr('rm')
+        spinner = $('#loader')
+        spinner.show();
+        $.ajax({
+            type: 'post'
+            , data: {
+                _token: "{{ csrf_token() }}"
+                , rm
+            }
+            , url: '<?= route('ambilformpendaftaran') ?>'
+            , success: function(response) {
+                spinner.hide();
+                $('.v_utama').attr('hidden',true)
+                $('.v_kedua').removeAttr('hidden',true)
+                $('.v_kedua').html(response);
+            }
+        });
+    });
+
 </script>

@@ -39,9 +39,16 @@ Route::post('/downloaddesa', [SatuSehatController::class, 'downloaddesa'])->name
 
 // indexpendaftaran
 Route::get('/indexpendaftaran', [RekamedisController::class, 'indexpendaftaran'])->name('indexpendaftaran');
+Route::get('/cariunit', [RekamedisController::class, 'cariunit'])->name('cariunit');
+Route::get('/caridokter', [RekamedisController::class, 'caridokter'])->name('caridokter');
 Route::get('/cariprovinsi', [RekamedisController::class, 'cariprovinsi'])->name('cariprovinsi');
 Route::get('/carikabupaten', [RekamedisController::class, 'carikabupaten'])->name('carikabupaten');
 Route::get('/carikecamatan', [RekamedisController::class, 'carikecamatan'])->name('carikecamatan');
 Route::get('/caridesa', [RekamedisController::class, 'caridesa'])->name('caridesa');
 Route::post('/simpandatapasienbaru', [RekamedisController::class, 'simpandatapasienbaru'])->name('simpandatapasienbaru');
 Route::post('/caripasien', [RekamedisController::class, 'caripasien'])->name('caripasien');
+Route::post('/ambilformpendaftaran', [RekamedisController::class, 'ambilformpendaftaran'])->name('ambilformpendaftaran');
+Route::post('/simpanpendaftaranpasien', [RekamedisController::class, 'simpanpendaftaranpasien'])->name('simpanpendaftaranpasien');
+Route::post('/ambilriwayatkunjungan', [RekamedisController::class, 'ambilriwayatkunjungan'])->name('ambilriwayatkunjungan');
+Route::post('/batalkunjungan', [RekamedisController::class, 'batalkunjungan'])->name('batalkunjungan');
+Route::post('/riwayatpendaftaran', [RekamedisController::class, 'riwayatpendaftaran'])->name('riwayatpendaftaran');

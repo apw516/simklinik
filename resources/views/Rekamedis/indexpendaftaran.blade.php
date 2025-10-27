@@ -17,7 +17,9 @@
 </div>
 <div class="app-content">
     <div class="container-fluid">
+        <div class="v_utama">
         <div class="v_1">
+            <button class="btn btn-info mb-3" data-bs-toggle="modal" data-bs-target="#modalriwayatpendaftaran" onclick="riwayatpendaftaran()"><i class="bi bi-list-task"></i> Riwayat Pendaftaran</button>
             <div class="row">
                 <div class="col-md-2">
                     <div class="mb-3">
@@ -173,9 +175,30 @@
                 </div>
             </div>
         </div>
+        </div>
+        <div hidden class="v_kedua">
+        </div>
     </div>
 </div>
-<script>
+
+<!-- Modal -->
+<div class="modal fade" id="modalriwayatpendaftaran" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Riwayat Pendaftaran</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="v_tabel_modal"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>   
     $('#rm').on('keypress', function(event) {
         caripasien()
     });
@@ -276,6 +299,21 @@
     function kembali() {
         $('.v_2').attr('hidden', true)
         $('.v_1').removeAttr('hidden', true)
+    }
+    function riwayatpendaftaran(){
+         spinner = $('#loader')
+            spinner.show();
+            $.ajax({
+                type: 'post'
+                , data: {
+                    _token: "{{ csrf_token() }}"
+                }
+                , url: '<?= route('riwayatpendaftaran') ?>'
+                , success: function(response) {
+                    spinner.hide();
+                    $('.v_tabel_modal').html(response);
+                }
+            });
     }
     $(document).ready(function() {
          caripasien()
