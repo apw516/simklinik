@@ -8,6 +8,7 @@
         <th>Dokter</th>
         <th>Tanggal kunjungan</th>
         <th>Status</th>
+        <th>Action</th>
     </thead>
     <tbody>
         @foreach ($riwayat as $r )
@@ -15,11 +16,15 @@
             <td>{{ $r->kode_kunjungan}}</td>
             <td>{{ $r->no_rm}}</td>
             <td>{{ $r->namapasien}}</td>
-            <td>@if($r->statuskunjungan == 1) <button unit="{{ $r->unit }}" tgl="{{$r->tanggalkunjungan}}" kodekunjungan="{{ $r->kode_kunjungan }}" class="badge bg-danger btn-sm batalkunjungan"> x </button> @endif {{ $r->counter}}</td>
+            <td>{{ $r->counter}}</td>
             <td>{{ $r->unit}}</td>
             <td>{{ $r->namadokter}}</td>
             <td>{{ $r->tanggalkunjungan}}</td>
-            <td>@if($r->statuskunjungan == 1)<button unit="{{ $r->unit }}" tgl="{{$r->tanggalkunjungan}}"  kodekunjungan="{{ $r->kode_kunjungan }}" class="badge bg-success btn-sm tutupkunjungan"> v </button> Aktif @elseif($r->statuskunjungan == 2) Selesai @endif</td>
+            <td>@if($r->statuskunjungan == 1) Aktif @elseif($r->statuskunjungan == 2) Selesai @endif</td>
+            <td>
+                <button unit="{{ $r->unit }}" tgl="{{$r->tanggalkunjungan}}" kodekunjungan="{{ $r->kode_kunjungan }}" class="badge bg-success btn-sm tutupkunjungan"> v </button>
+                <button unit="{{ $r->unit }}" tgl="{{$r->tanggalkunjungan}}" kodekunjungan="{{ $r->kode_kunjungan }}" class="badge bg-danger btn-sm batalkunjungan"> x </button>
+            </td>
         </tr>
         @endforeach
     </tbody>
@@ -42,7 +47,7 @@
         status = 3
         Swal.fire({
             title: "Anda yakin ?"
-            , text: "Kunjungan ke "+ unit + " tanggal "+ tgl +" akan dibatalkan !"
+            , text: "Kunjungan ke " + unit + " tanggal " + tgl + " akan dibatalkan !"
             , icon: "error"
             , showCancelButton: true
             , confirmButtonColor: "#3085d6"
@@ -50,7 +55,7 @@
             , confirmButtonText: "Ya batalkan ..."
         }).then((result) => {
             if (result.isConfirmed) {
-                batalkunjungan(status,kodekunjungan)
+                batalkunjungan(status, kodekunjungan)
             }
         });
     });
@@ -61,7 +66,7 @@
         status = 2
         Swal.fire({
             title: "Anda yakin ?"
-            , text: "Kunjungan ke "+ unit + " tanggal "+ tgl +" akan ditutup !"
+            , text: "Kunjungan ke " + unit + " tanggal " + tgl + " akan ditutup !"
             , icon: "question"
             , showCancelButton: true
             , confirmButtonColor: "#3085d6"
@@ -69,46 +74,48 @@
             , confirmButtonText: "Ya tutup kunjungan ..."
         }).then((result) => {
             if (result.isConfirmed) {
-                batalkunjungan(status,kodekunjungan)
+                batalkunjungan(status, kodekunjungan)
             }
         });
     });
-    function batalkunjungan(status,kodekunjungan){
+
+    function batalkunjungan(status, kodekunjungan) {
         spinner = $('#loader')
         spinner.show();
         $.ajax({
-            async: true,
-            type: 'post',
-            dataType: 'json',
-            data: {
-                _token: "{{ csrf_token() }}",
-                status,kodekunjungan
-            },
-            url: '<?= route('batalkunjungan') ?>',
-            error: function(data) {
+            async: true
+            , type: 'post'
+            , dataType: 'json'
+            , data: {
+                _token: "{{ csrf_token() }}"
+                , status
+                , kodekunjungan
+            }
+            , url: '<?= route('batalkunjungan') ?>'
+            , error: function(data) {
                 spinner.hide()
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Ooops....',
-                    text: 'Sepertinya ada masalah......',
-                    footer: ''
+                    icon: 'error'
+                    , title: 'Ooops....'
+                    , text: 'Sepertinya ada masalah......'
+                    , footer: ''
                 })
-            },
-            success: function(data) {
+            }
+            , success: function(data) {
                 spinner.hide()
                 if (data.kode == 500) {
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Oopss...',
-                        text: data.message,
-                        footer: ''
+                        icon: 'error'
+                        , title: 'Oopss...'
+                        , text: data.message
+                        , footer: ''
                     })
                 } else {
                     Swal.fire({
-                        icon: 'success',
-                        title: 'OK',
-                        text: data.message,
-                        footer: ''
+                        icon: 'success'
+                        , title: 'OK'
+                        , text: data.message
+                        , footer: ''
                     })
                     ambilriwayatkunjungan()
                 }

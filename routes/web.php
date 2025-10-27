@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DokterController;
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\RekamedisController;
 use App\Http\Controllers\SatuSehatController;
@@ -52,3 +53,11 @@ Route::post('/simpanpendaftaranpasien', [RekamedisController::class, 'simpanpend
 Route::post('/ambilriwayatkunjungan', [RekamedisController::class, 'ambilriwayatkunjungan'])->name('ambilriwayatkunjungan');
 Route::post('/batalkunjungan', [RekamedisController::class, 'batalkunjungan'])->name('batalkunjungan');
 Route::post('/riwayatpendaftaran', [RekamedisController::class, 'riwayatpendaftaran'])->name('riwayatpendaftaran');
+
+
+//dokter
+Route::get('/caridiagnosa', [DokterController::class, 'caridiagnosa'])->name('caridiagnosa');
+Route::get('/indexdatakunjungandokter', [DokterController::class, 'indexdatakunjungandokter'])->name('indexdatakunjungandokter');
+Route::post('/caripasiendokter', [DokterController::class, 'caripasiendokter'])->name('caripasiendokter');
+Route::post('/ambildetailpasiendokter', [DokterController::class, 'ambildetailpasiendokter'])->name('ambildetailpasiendokter');
+Route::post('/simpanpemeriksaandokter', [DokterController::class, 'simpanpemeriksaandokter'])->name('simpanpemeriksaandokter');
