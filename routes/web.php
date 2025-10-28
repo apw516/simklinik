@@ -18,6 +18,7 @@ Route::get('/dashboard', [DashboardController::class, 'index']);
 
 
 Route::get('/indexdatauser', [MasterController::class, 'indexdatauser'])->name('indexdatauser');
+Route::get('/indexdatatarif', [MasterController::class, 'indexdatatarif'])->name('indexdatatarif');
 Route::get('/indexdataunit', [MasterController::class, 'indexdataunit'])->name('indexdataunit');
 Route::get('/indexdatapegawai', [MasterController::class, 'indexdatapegawai'])->name('indexdatapegawai');
 Route::get('/indexdatalokasi', [MasterController::class, 'indexdatalokasi'])->name('indexdatalokasi');
@@ -26,6 +27,7 @@ Route::post('/ambildetailunit', [MasterController::class, 'ambildetailunit'])->n
 Route::post('/ambildetailpegawai', [MasterController::class, 'ambildetailpegawai'])->name('ambildetailpegawai');
 Route::post('/simpanunit', [MasterController::class, 'simpanunit'])->name('simpanunit');
 Route::post('/simpanpegawai', [MasterController::class, 'simpanpegawai'])->name('simpanpegawai');
+Route::post('/simpantarif', [MasterController::class, 'simpantarif'])->name('simpantarif');
 
 
 Route::get('/get_pasien', [SatuSehatController::class, 'search_pasien'])->name('get_pasien');
@@ -40,6 +42,7 @@ Route::post('/downloaddesa', [SatuSehatController::class, 'downloaddesa'])->name
 
 // indexpendaftaran
 Route::get('/indexpendaftaran', [RekamedisController::class, 'indexpendaftaran'])->name('indexpendaftaran');
+Route::get('/indexdatakunjunganrekamedis', [RekamedisController::class, 'indexdatakunjunganrekamedis'])->name('indexdatakunjunganrekamedis');
 Route::get('/cariunit', [RekamedisController::class, 'cariunit'])->name('cariunit');
 Route::get('/caridokter', [RekamedisController::class, 'caridokter'])->name('caridokter');
 Route::get('/cariprovinsi', [RekamedisController::class, 'cariprovinsi'])->name('cariprovinsi');
@@ -53,6 +56,8 @@ Route::post('/simpanpendaftaranpasien', [RekamedisController::class, 'simpanpend
 Route::post('/ambilriwayatkunjungan', [RekamedisController::class, 'ambilriwayatkunjungan'])->name('ambilriwayatkunjungan');
 Route::post('/batalkunjungan', [RekamedisController::class, 'batalkunjungan'])->name('batalkunjungan');
 Route::post('/riwayatpendaftaran', [RekamedisController::class, 'riwayatpendaftaran'])->name('riwayatpendaftaran');
+Route::post('/carikunjunganrekamedis', [RekamedisController::class, 'carikunjunganrekamedis'])->name('carikunjunganrekamedis');
+Route::post('/ambildetailkunjungan', [RekamedisController::class, 'ambildetailkunjungan'])->name('ambildetailkunjungan');
 
 
 //dokter
@@ -61,3 +66,4 @@ Route::get('/indexdatakunjungandokter', [DokterController::class, 'indexdatakunj
 Route::post('/caripasiendokter', [DokterController::class, 'caripasiendokter'])->name('caripasiendokter');
 Route::post('/ambildetailpasiendokter', [DokterController::class, 'ambildetailpasiendokter'])->name('ambildetailpasiendokter');
 Route::post('/simpanpemeriksaandokter', [DokterController::class, 'simpanpemeriksaandokter'])->name('simpanpemeriksaandokter');
+Route::post('/ambilriwayatbilling', [DokterController::class, 'ambilriwayatbilling'])->name('ambilriwayatbilling');

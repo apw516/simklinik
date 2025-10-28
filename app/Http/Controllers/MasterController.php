@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\mt_pegawai;
+use App\Models\mt_tarif;
 use App\Models\mt_unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,15 @@ class MasterController extends Controller
         return view('Master.indexdatauser', compact([
             'menu',
             'datauser'
+        ]));
+    }
+    public function indexdatatarif()
+    {
+        $menu = 'datatarif';
+        $datatarif = db::select('select * from mt_tarif');
+        return view('Master.indexdatatarif', compact([
+            'menu',
+            'datatarif'
         ]));
     }
     public function indexdataunit()
@@ -71,6 +81,21 @@ class MasterController extends Controller
         return view('Master.form_edit_unit', compact([
             'dataunit'
         ]));
+    }
+    public function simpantarif(Request $request)
+    {
+        $data = [
+            'nama' => $request->nama,
+            'jenis' => $request->jenis,
+            'harga' => $request->harga,
+        ];
+        mt_tarif::create($data);
+         $data2 = [
+            'kode' => 200,
+            'message' => 'data berhasil disimpan'
+        ];
+        echo json_encode($data2);
+        die;
     }
     public function simpanunit(Request $request)
     {

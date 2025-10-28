@@ -25,6 +25,37 @@ class RekamedisController extends Controller
             'mt_provinsi'
         ]));
     }
+    public function indexdatakunjunganrekamedis()
+    {
+        $menu = 'datakunjunganrekamedis';
+        $mt_provinsi = db::select('select * from mt_provinsi');
+        $now = $this->get_date();
+        return view('Rekamedis.indexdatakunjungan', compact([
+            'menu',
+            'mt_provinsi',
+            'now'
+        ]));
+    }
+    public function carikunjunganrekamedis(Request $request)
+    {
+        $tglawal = $request->tglawal;
+        $tglakhir = $request->tglakhir;
+        $datakunjungan = db::select('select * from ts_kunjungan a 
+        inner join mt_pasien b on a.no_rm = b.no_rm
+        where a.tanggalkunjungan between ? and  ? order by kode_kunjungan desc',[$tglawal,$tglakhir]);
+        return view('Rekamedis.tabel_data_kunjungan',compact([
+            'datakunjungan'
+        ]));
+    }
+    public function ambildetailkunjungan(Request $request) 
+    {
+        $kode_kunjungan = $request->kodekunjungan;
+        $ts_kunjungan = db::select('select * from ts_kunjungan where kode_kunjungan = ?',[$kode_kunjungan]);
+        $ts_layanan = db::select('select *,b.id as iddetail from ts_layanan_header a inner join ts_layanan_detail b on a.id = b.id_header where a.kode_kunjungan = ? and b.status_layanan_detail = 1',[$kode_kunjungan]);
+        return view('Rekamedis.detail_kunjungan',compact([
+            'ts_kunjungan','ts_layanan'
+        ]));
+    }
     public function caripasien(Request $request)
     {
         $RM = $request->rm;
@@ -184,7 +215,7 @@ class RekamedisController extends Controller
     }
     public function riwayatpendaftaran(Request $request)
     {
-        $riwayat = db::select('select * from ts_kunjungan inner join mt_pasien b on ts_kunjungan.no_rm = b.no_rm where tanggalkunjungan = ? and statuskunjungan != 3 order by kode_kunjungan asc', [$this->get_date()]);
+        $riwayat = db::select('select * from ts_kunjungan inner join mt_pasien b on ts_kunjungan.no_rm = b.no_rm where tanggalkunjungan = ? and statuskunjungan != 3 and status_pemeriksaan = 0 order by kode_kunjungan asc', [$this->get_date()]);
         return view('Rekamedis.list_tabel_riwayat_kunjungan', compact([
             'riwayat'
         ]));

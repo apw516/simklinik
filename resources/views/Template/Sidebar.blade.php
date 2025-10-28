@@ -40,6 +40,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('indexdatakunjunganrekamedis')}}" class="nav-link @if($menu == 'datakunjunganrekamedis') active @endif">
+                        <i class="nav-icon bi bi-file-bar-graph-fill"></i>
+                        <p>Data Kunjungan</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('indexdatauser')}}" class="nav-link @if($menu == 'masterpasien') active @endif">
                         <i class="nav-icon bi bi-file-bar-graph-fill"></i>
                         <p>Master Pasien</p>
@@ -57,6 +63,12 @@
                     <a href="{{ route('indexdatauser')}}" class="nav-link @if($menu == 'datauser') active @endif">
                         <i class="nav-icon bi bi-file-bar-graph-fill"></i>
                         <p>Data User</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('indexdatatarif')}}" class="nav-link @if($menu == 'datatarif') active @endif">
+                        <i class="nav-icon bi bi-file-bar-graph-fill"></i>
+                        <p>Data Tarif</p>
                     </a>
                 </li>
                 <li class="nav-item">
