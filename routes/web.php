@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DokterController;
+use App\Http\Controllers\KasirController;
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\RekamedisController;
 use App\Http\Controllers\SatuSehatController;
@@ -67,3 +68,12 @@ Route::post('/caripasiendokter', [DokterController::class, 'caripasiendokter'])-
 Route::post('/ambildetailpasiendokter', [DokterController::class, 'ambildetailpasiendokter'])->name('ambildetailpasiendokter');
 Route::post('/simpanpemeriksaandokter', [DokterController::class, 'simpanpemeriksaandokter'])->name('simpanpemeriksaandokter');
 Route::post('/ambilriwayatbilling', [DokterController::class, 'ambilriwayatbilling'])->name('ambilriwayatbilling');
+
+
+
+Route::get('/indexdatakunjungankasir', [KasirController::class, 'indexdatakunjungankasir'])->name('indexdatakunjungankasir');
+Route::post('/carilayananheader', [KasirController::class, 'carilayananheader'])->name('carilayananheader');
+Route::post('/ambildatabilling', [KasirController::class, 'ambildatabilling'])->name('ambildatabilling');
+Route::post('/detailbilling2', [KasirController::class, 'detailbilling2'])->name('detailbilling2');
+Route::post('/hitungpembayaran', [KasirController::class, 'hitungpembayaran'])->name('hitungpembayaran');
+

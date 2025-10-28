@@ -58,6 +58,13 @@
                         <p>Data Kunjungan</p>
                     </a>
                 </li>
+                <li class="nav-header">KASIR</li>
+                  <li class="nav-item">
+                    <a href="{{ route('indexdatakunjungankasir')}}" class="nav-link @if($menu == 'datakunjungankasir') active @endif">
+                        <i class="nav-icon bi bi-file-bar-graph-fill"></i>
+                        <p>Data Kunjungan</p>
+                    </a>
+                </li>
                 <li class="nav-header">DATA MASTER</li>
                 <li class="nav-item">
                     <a href="{{ route('indexdatauser')}}" class="nav-link @if($menu == 'datauser') active @endif">
