@@ -24,8 +24,8 @@
         </div>       
     </div>
     <div class="card-footer">
-        <button class="btn btn-success float-end ms-1 me-1" onclick="terima()"><i class="bi bi-cloud-download-fill"></i> Terima </button>
-        <button class="btn btn-danger float-end ms-1 me-1"><i class="bi bi-x"></i> Retur </button>
+        <button class="btn btn-success float-end ms-1 me-1 btnterima" onclick="terima()"><i class="bi bi-cloud-download-fill"></i> Terima </button>
+        <button class="btn btn-danger float-end ms-1 me-1 btnretur"><i class="bi bi-x"></i> Retur </button>
     </div>
 </div>
 
@@ -35,7 +35,7 @@
         <div class="row">
             <div class="col-md-2">
                 <label for="">Total Tagihan</label>
-                <input type="text" id="totaltagihan" readonly class="form-control" placeholder="Total tagihan ...">
+                <input readonly type="text" id="totaltagihan" readonly class="form-control" placeholder="Total tagihan ...">
                 <input hidden type="text" id="totaltagihan2" readonly class="form-control" placeholder="Total tagihan ...">
             </div>
             <div class="col-md-3">
@@ -43,7 +43,7 @@
                 <input type="text" id="uangbayar" class="form-control" placeholder="Masukan uang yang diberikan pasien ..." value="0">
             </div>
             <div class="col-md-3">
-                <button class="btn btn-success" style="margin-top:26px" onclick="hitungpembayaran()"><i class="bi bi-cloud-download-fill"></i> Proses ...</button>
+                <button class="btn btn-success btnhitung" style="margin-top:26px" onclick="hitungpembayaran()"><i class="bi bi-cloud-download-fill"></i> Proses ...</button>
             </div>
         </div>
         <div class="v_nota_pembayaran">
@@ -100,6 +100,10 @@
             , success: function(response) {
                 spinner.hide();
                 $('.v_nota_pembayaran').html(response);
+                $('.btnhitung').attr('disabled',true)
+                $('.btnterima').attr('disabled',true)
+                $('.btnretur').attr('disabled',true)               
+                $('#uangbayar').attr('readonly',true)
             }
         });
     }

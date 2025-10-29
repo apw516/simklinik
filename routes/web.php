@@ -72,8 +72,12 @@ Route::post('/ambilriwayatbilling', [DokterController::class, 'ambilriwayatbilli
 
 
 Route::get('/indexdatakunjungankasir', [KasirController::class, 'indexdatakunjungankasir'])->name('indexdatakunjungankasir');
+Route::get('/indexriwayatpembayaran', [KasirController::class, 'indexriwayatpembayaran'])->name('indexriwayatpembayaran');
 Route::post('/carilayananheader', [KasirController::class, 'carilayananheader'])->name('carilayananheader');
+Route::post('/caririwayatpembayaran', [KasirController::class, 'caririwayatpembayaran'])->name('caririwayatpembayaran');
 Route::post('/ambildatabilling', [KasirController::class, 'ambildatabilling'])->name('ambildatabilling');
 Route::post('/detailbilling2', [KasirController::class, 'detailbilling2'])->name('detailbilling2');
 Route::post('/hitungpembayaran', [KasirController::class, 'hitungpembayaran'])->name('hitungpembayaran');
+Route::post('/batalbayar', [KasirController::class, 'batalbayar'])->name('batalbayar');
+Route::post('/simpanpembayaran', [KasirController::class, 'simpanpembayaran'])->name('simpanpembayaran');
 

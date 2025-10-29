@@ -65,6 +65,12 @@
                         <p>Data Kunjungan</p>
                     </a>
                 </li>
+                  <li class="nav-item">
+                    <a href="{{ route('indexriwayatpembayaran')}}" class="nav-link @if($menu == 'riwayatpembayaran') active @endif">
+                        <i class="nav-icon bi bi-file-bar-graph-fill"></i>
+                        <p>Riwayat Pembayaran</p>
+                    </a>
+                </li>
                 <li class="nav-header">DATA MASTER</li>
                 <li class="nav-item">
                     <a href="{{ route('indexdatauser')}}" class="nav-link @if($menu == 'datauser') active @endif">

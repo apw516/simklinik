@@ -32,3 +32,16 @@
  </table>
 <input hidden type="text" value="{{$gt}}" id="grandtotalbilling">
 <input hidden type="text" value="Rp. {{ number_format($gt, 0, ',', '.') }}" id="grandtotalbilling2">
+<script>
+    $(document).ready(function() {
+            cektagihan()
+     })
+     function cektagihan()
+     {
+        total = $('#grandtotalbilling').val()
+        if(total == 0){
+            $('.btnterima').attr('hidden',true)
+            $('.btnretur').attr('hidden',true)
+        }
+     }
+</script>
