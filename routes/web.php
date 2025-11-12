@@ -18,6 +18,10 @@ Route::post('/login', [AuthController::class, 'authenticate']);
 Route::get('/dashboard', [DashboardController::class, 'index']);
 
 
+Route::get('/indexstokobat', [MasterController::class, 'indexstokobat'])->name('indexstokobat');
+Route::get('/indexpurchaseorder', [MasterController::class, 'indexpurchaseorder'])->name('indexpurchaseorder');
+Route::get('/indexdatadistributor', [MasterController::class, 'indexdatadistributor'])->name('indexdatadistributor');
+Route::get('/indexmasterbarang', [MasterController::class, 'indexmasterbarang'])->name('indexmasterbarang');
 Route::get('/indexdatauser', [MasterController::class, 'indexdatauser'])->name('indexdatauser');
 Route::get('/indexdatatarif', [MasterController::class, 'indexdatatarif'])->name('indexdatatarif');
 Route::get('/indexdataunit', [MasterController::class, 'indexdataunit'])->name('indexdataunit');
@@ -29,6 +33,13 @@ Route::post('/ambildetailpegawai', [MasterController::class, 'ambildetailpegawai
 Route::post('/simpanunit', [MasterController::class, 'simpanunit'])->name('simpanunit');
 Route::post('/simpanpegawai', [MasterController::class, 'simpanpegawai'])->name('simpanpegawai');
 Route::post('/simpantarif', [MasterController::class, 'simpantarif'])->name('simpantarif');
+Route::post('/simpandistributor', [MasterController::class, 'simpandistributor'])->name('simpandistributor');
+Route::post('/simpanmasterbarang', [MasterController::class, 'simpanmasterbarang'])->name('simpanmasterbarang');
+Route::post('/ambilformpurchaseorder', [MasterController::class, 'ambilformpurchaseorder'])->name('ambilformpurchaseorder');
+Route::post('/ambilbarangdistributor', [MasterController::class, 'ambilbarangdistributor'])->name('ambilbarangdistributor');
+Route::post('/simpanpurchaseorder', [MasterController::class, 'simpanpurchaseorder'])->name('simpanpurchaseorder');
+Route::post('/ambil_form_terima_po', [MasterController::class, 'ambilFormTerimaPO'])->name('ambil_form_terima_po');
+Route::post('/simpandataterimapo', [MasterController::class, 'simpandataterimapo'])->name('simpandataterimapo');
 
 
 Route::get('/get_pasien', [SatuSehatController::class, 'search_pasien'])->name('get_pasien');
@@ -59,6 +70,7 @@ Route::post('/batalkunjungan', [RekamedisController::class, 'batalkunjungan'])->
 Route::post('/riwayatpendaftaran', [RekamedisController::class, 'riwayatpendaftaran'])->name('riwayatpendaftaran');
 Route::post('/carikunjunganrekamedis', [RekamedisController::class, 'carikunjunganrekamedis'])->name('carikunjunganrekamedis');
 Route::post('/ambildetailkunjungan', [RekamedisController::class, 'ambildetailkunjungan'])->name('ambildetailkunjungan');
+Route::post('/ambildetaileditkunjungan', [RekamedisController::class, 'ambildetaileditkunjungan'])->name('ambildetaileditkunjungan');
 
 
 //dokter

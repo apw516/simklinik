@@ -136,6 +136,46 @@
                         </div>
                     </div>
                 </form>
+                <div class="card mb-1">
+                    <div class="card-header">Resep obat   <button class="btn btn-info float-end riwayatbilling" kodekunjungan="{{ $kode_kunjungan }}" data-bs-toggle="modal" data-bs-target="#modalriwayatbilling"><i class="bi bi-list-columns-reverse"></i> Riwayat Resep</button></div>
+                    <div class="card-body">
+                        <div class="row">
+                        <div class="col-md-12">
+                                     <table id="tabelobat" class="table table sm text-xs" style="font-size: 10px">
+                                                            <thead>
+                                                                <th>Nama</th>
+                                                                <th>Harga beli satuan</th>
+                                                                <th>Stok</th>
+                                                                <th>ed</th>
+                                                                <th></th>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach ($mt_stok as $t)
+                                                                    <tr>
+                                                                        <td>{{ $t->nama_barang}}</td>
+                                                                        <td>Rp. {{ number_format($t->harga_beli_satuan_kecil, 0, ',', '.') }}</td>
+                                                                        <td>{{ $t->stok_current}}</td>
+                                                                        <td>{{ \Carbon\Carbon::parse($t->ed)->format('d-M-Y') }}</td>
+                                                                        <td>
+                                                                            <button idstok="{{$t->id}}" harga1="Rp. {{ number_format($t->harga_beli_satuan_kecil, 0, ',', '.') }}" harga2="{{$t->harga_beli_satuan_kecil}}" nama="{{$t->nama_barang }}" class="badge bg-success pilihobat"><i class="bi bi-check2-circle"></i></button> 
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                        </div>
+                        <div class="col-md-12">
+                                <label for="">Obat yang dipilih ...</label><br>
+                                  <form action="" method="post" class="formresep">
+                                    <div class="draftresep">
+                                        <div>
+                                        </div>
+                                    </div>
+                                </form>
+                        </div>
+                       </div>
+                    </div>
+                </div>
                 <div class="card">
                     <div class="card-header">Billing System
                         <button class="btn btn-info float-end riwayatbilling" kodekunjungan="{{ $kode_kunjungan }}" data-bs-toggle="modal" data-bs-target="#modalriwayatbilling"><i class="bi bi-list-columns-reverse"></i> Riwayat Billing</button>
@@ -253,6 +293,7 @@
     function simpanassesmen2() {        
         var data = $('.formpemeriksaan').serializeArray();
         var data2 = $('.formbilling').serializeArray();
+        var data3 = $('.formresep').serializeArray();
         var kode_kunjungan = $('#kode_kunjungan').val()
         spinner = $('#loader')
         spinner.show();
@@ -264,6 +305,7 @@
                 _token: "{{ csrf_token() }}"
                 , data: JSON.stringify(data)
                 , data2: JSON.stringify(data2)
+                , data3: JSON.stringify(data3)
                 , kode_kunjungan
             , }
             , url: '<?= route('simpanpemeriksaandokter') ?>'
@@ -309,6 +351,16 @@
             , "ordering": false
         , })
     });
+   $(function() {
+        $("#tabelobat").DataTable({
+            "responsive": true
+            , "lengthChange": false
+            , "autoWidth": false
+            , "pageLength": 5
+            , "searching": true
+            , "ordering": false
+        , })
+    });
     $(".pilihtarif").on('click', function(event) {
         idtarif = $(this).attr('idtarif')
         nama = $(this).attr('nama')
@@ -328,6 +380,34 @@
         );
         Swal.fire({
             title: "Tarif dipilih " + nama,
+            text: "ok!",
+            icon: "success"
+        });
+        $(wrapper).on("click", ".remove_field", function(e) { //user click on remove
+            e.preventDefault();
+            $(this).parent('div').remove();
+            x--;
+        })
+    });
+    $(".pilihobat").on('click', function(event) {
+        idstok = $(this).attr('idstok')
+        nama = $(this).attr('nama')
+        harga1 = $(this).attr('harga1')
+        harga2 = $(this).attr('harga2')
+        var wrapper = $(".draftresep");
+        $(wrapper).append(
+            '<div class="row text-xs"><div class="form-group col-md-2"><label for="">Nama Tarif</label><input readonly type="" class="form-control form-control-sm text-xs edit_field" id="namabarang" name="namabarang" value="' +
+            nama +
+            '"><input   hidden readonly type="" class="form-control form-control-sm" id="kodestok" name="kodestok" value="' +
+            idstok +
+            '"><input   hidden readonly type="" class="form-control form-control-sm" id="harga2" name="harga2" value="' +
+            harga2 +
+            '"></div><div class="form-group col-md-2"><label for="">Harga</label><input readonly type="" class="form-control form-control-sm text-xs edit_field" id="harga" name="harga" value="' +
+            harga1 +
+            '"></div><div class="form-group col-md-2"><label for="">Jenis Tarif</label><select class="form-select" aria-label="Default select example" name="jenistarif" id="jenistarif"><option selected value="0">Tarif Paket</option><option value="1">NON PAKET</option></select></div><div class="form-group col-md-1"><label for="">qty</label><input type="" class="form-control form-control-sm text-xs edit_field" id="qty" name="qty" value=""></div><div class="form-group col-md-3"><label for="">Aturan Pakai</label><textarea type="" class="form-control form-control-sm text-xs edit_field" id="aturanpakai" name="aturanpakai" value=""></textarea></div><i class="bi bi-x-square remove_field form-group col-md-1 text-danger" kode2=""></i></div>'
+        );
+        Swal.fire({
+            title: "Obat dipilih " + nama,
             text: "ok!",
             icon: "success"
         });

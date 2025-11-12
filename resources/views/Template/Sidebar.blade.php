@@ -71,6 +71,25 @@
                         <p>Riwayat Pembayaran</p>
                     </a>
                 </li>
+                <li class="nav-header">GUDANG</li>
+                  <li class="nav-item">
+                    <a href="{{ route('indexstokobat')}}" class="nav-link @if($menu == 'datastokobat') active @endif">
+                        <i class="nav-icon bi bi-file-bar-graph-fill"></i>
+                        <p>Data Stok Obat</p>
+                    </a>
+                </li>
+                  <li class="nav-item">
+                    <a href="{{ route('indexpurchaseorder')}}" class="nav-link @if($menu == 'datapo') active @endif">
+                        <i class="nav-icon bi bi-file-bar-graph-fill"></i>
+                        <p>Data Purchase Order</p>
+                    </a>
+                </li>
+                  <li class="nav-item">
+                    <a href="{{ route('indexmasterbarang')}}" class="nav-link @if($menu == 'masterbarang') active @endif">
+                        <i class="nav-icon bi bi-file-bar-graph-fill"></i>
+                        <p>Master Barang</p>
+                    </a>
+                </li>
                 <li class="nav-header">DATA MASTER</li>
                 <li class="nav-item">
                     <a href="{{ route('indexdatauser')}}" class="nav-link @if($menu == 'datauser') active @endif">
@@ -96,6 +115,12 @@
                         <p>Data Pegawai</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('indexdatadistributor')}}" class="nav-link @if($menu == 'datadistributor') active @endif">
+                        <i class="nav-icon bi bi-file-bar-graph-fill"></i>
+                        <p>Data Distributor</p>
+                    </a>
+                </li>              
                 <li class="nav-item">
                     <a href="{{ route('indexdatalokasi')}}" class="nav-link @if($menu == 'datalokasi') active @endif">
                         <i class="nav-icon bi bi-file-bar-graph-fill"></i>

@@ -45,13 +45,15 @@ class DokterController extends MasterController
         $kunjungan = db::select('select * from ts_kunjungan where kode_kunjungan = ?', [$kode_kunjungan]);
         $date = $this->get_date();
         $mt_tarif = db::select('select * from mt_tarif where jenis != ?',['RI']);
+        $mt_stok = db::select('select * from mt_sediaan_barang where stok_current != ?',[0]);
         return view('Dokter.form_erm_dokter',compact([
-            'mt_pasien','riwayat','kunjungan','kode_kunjungan','mt_tarif'
+            'mt_pasien','riwayat','kunjungan','kode_kunjungan','mt_tarif','mt_stok'
         ]));
     }
     public function simpanpemeriksaandokter(Request $request){
         $data = json_decode($_POST['data'], true);
         $data2 = json_decode($_POST['data2'], true);
+        $data3 = json_decode($_POST['data3'], true);
         foreach ($data as $nama) {
             $index =  $nama['name'];
             $value =  $nama['value'];
@@ -65,6 +67,15 @@ class DokterController extends MasterController
                 $arraytarif[] = $dataSet2;
             }
         }
+         foreach ($data3 as $nama3) {
+            $index3 = $nama3['name'];
+            $value3 = $nama3['value'];
+            $dataSet3[$index3] = $value3;
+            if ($index3 == 'aturanpakai') {
+                $arrayobat[] = $dataSet3;
+            }
+        }
+        dd($arrayobat);
         // dd($arraytarif);
         if(count($data2) > 0){
             $kode_header = $this->get_layanan_header($id = 'RJ');

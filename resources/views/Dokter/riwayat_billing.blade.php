@@ -2,7 +2,7 @@
     <thead>
         <th>Nama </th>
         <th>harga</th>
-        <th></th>
+        <th>action</th>
     </thead>
     <tbody>
         @foreach ($ts_layanan as $t )
@@ -10,7 +10,11 @@
                 <td>{{ $t->nama_layanan}}</td>
                 <td>Rp. {{ number_format($t->tarif, 0, ',', '.') }}</td>
                 <td>
+                    @if($t->status_pembayaran == 1)
+                    Sudah dibayar 
+                    @else
                     <button class="badge bg-danger retur" namalayanan="{{ $t->nama_layanan }}" layanandetail="{{$t->iddetail}}" idheader="{{$t->id_header}}"><i class="bi bi-x"></i></button>
+                    @endif
                 </td>
             </tr>
         @endforeach

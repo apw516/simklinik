@@ -29,12 +29,14 @@
             <thead>
                 <th>Nama </th>
                 <th>harga</th>
+                <th>Status</th>
             </thead>
             <tbody>
                 @foreach ($ts_layanan as $t )
                     <tr>
                         <td>{{ $t->nama_layanan}}</td>
                         <td>Rp. {{ number_format($t->tarif, 0, ',', '.') }}</td>
+                        <td>@if($t->status_pembayaran == 1) Sudah dibayar @elseif($t->status_pembayaran == 0) Belum dibayar @endif </td>
                     </tr>
                 @endforeach
             </tbody>

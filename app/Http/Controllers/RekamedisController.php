@@ -56,6 +56,15 @@ class RekamedisController extends Controller
             'ts_kunjungan','ts_layanan'
         ]));
     }
+    public function ambildetaileditkunjungan(Request $request) 
+    {
+        $kode_kunjungan = $request->kodekunjungan;
+        $ts_kunjungan = db::select('select * from ts_kunjungan where kode_kunjungan = ?',[$kode_kunjungan]);
+        $dokter = db::select('select * from mt_pegawai where Jabatan = ?',['dokter']);
+        return view('Rekamedis.form_edit_kunjungan',compact([
+            'ts_kunjungan','dokter'
+        ]));
+    }
     public function caripasien(Request $request)
     {
         $RM = $request->rm;
