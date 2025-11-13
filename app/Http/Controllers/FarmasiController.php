@@ -18,6 +18,7 @@ class FarmasiController extends Controller
         ]));
     }
     public function ambildetailorder(request $request){
+        $test = '123';
         $idheader = $request->idheader;
         $detail = db::select('select * from ts_layanan_detail a inner join mt_sediaan_barang b on a.idlayanan = b.id where a.id_header = ?',[$idheader]);
         return view('Farmasi.detail_order',compact([
