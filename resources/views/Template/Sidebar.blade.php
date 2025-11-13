@@ -58,6 +58,13 @@
                         <p>Data Kunjungan</p>
                     </a>
                 </li>
+                <li class="nav-header">FARMASI</li>
+                  <li class="nav-item">
+                    <a href="{{ route('indexdataorder')}}" class="nav-link @if($menu == 'dataorderobat') active @endif">
+                        <i class="nav-icon bi bi-file-bar-graph-fill"></i>
+                        <p>Data Order</p>
+                    </a>
+                </li>
                 <li class="nav-header">KASIR</li>
                   <li class="nav-item">
                     <a href="{{ route('indexdatakunjungankasir')}}" class="nav-link @if($menu == 'datakunjungankasir') active @endif">

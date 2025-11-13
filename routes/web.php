@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DokterController;
+use App\Http\Controllers\FarmasiController;
 use App\Http\Controllers\KasirController;
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\RekamedisController;
@@ -92,4 +93,9 @@ Route::post('/detailbilling2', [KasirController::class, 'detailbilling2'])->name
 Route::post('/hitungpembayaran', [KasirController::class, 'hitungpembayaran'])->name('hitungpembayaran');
 Route::post('/batalbayar', [KasirController::class, 'batalbayar'])->name('batalbayar');
 Route::post('/simpanpembayaran', [KasirController::class, 'simpanpembayaran'])->name('simpanpembayaran');
+
+
+
+Route::get('/indexdataorder', [FarmasiController::class, 'indexdataorder'])->name('indexdataorder');
+Route::post('/ambil_detail_order', [FarmasiController::class, 'ambildetailorder'])->name('ambil_detail_order');
 

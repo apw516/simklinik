@@ -16,7 +16,8 @@ class DokterController extends MasterController
         $menu = 'datakunjungan';
         $date = $this->get_date();
         return view('Dokter.indexdatakunjungan', compact([
-            'menu','date'
+            'menu',
+            'date'
         ]));
     }
     public function caridiagnosa(Request $request)
@@ -27,30 +28,38 @@ class DokterController extends MasterController
             ->get();
         return response()->json($results);
     }
-    public function caripasiendokter(Request $request){
+    public function caripasiendokter(Request $request)
+    {
         $tglawal = $request->tglawal;
         $tglakhir = $request->tglakhir;
         $datakunjungan = db::select('select * from ts_kunjungan a 
         inner join mt_pasien b on a.no_rm = b.no_rm
-        where a.statuskunjungan != 3 and a.tanggalkunjungan between ? and  ?',[$tglawal,$tglakhir]);
-        return view('Dokter.tabel_kunjungan',compact([
+        where a.statuskunjungan != 3 and a.tanggalkunjungan between ? and  ?', [$tglawal, $tglakhir]);
+        return view('Dokter.tabel_kunjungan', compact([
             'datakunjungan'
         ]));
     }
-    public function ambildetailpasiendokter(Request $request){
+    public function ambildetailpasiendokter(Request $request)
+    {
         $rm = $request->rm;
         $kode_kunjungan = $request->kodekunjungan;
         $mt_pasien = db::select('select * from mt_pasien where no_rm = ?', [$rm]);
         $riwayat = db::select('select * from ts_kunjungan where no_rm = ? and statuskunjungan != 3 order by kode_kunjungan desc', [$rm]);
         $kunjungan = db::select('select * from ts_kunjungan where kode_kunjungan = ?', [$kode_kunjungan]);
         $date = $this->get_date();
-        $mt_tarif = db::select('select * from mt_tarif where jenis != ?',['RI']);
-        $mt_stok = db::select('select * from mt_sediaan_barang where stok_current != ?',[0]);
-        return view('Dokter.form_erm_dokter',compact([
-            'mt_pasien','riwayat','kunjungan','kode_kunjungan','mt_tarif','mt_stok'
+        $mt_tarif = db::select('select * from mt_tarif where jenis != ?', ['RI']);
+        $mt_stok = db::select('select * from mt_sediaan_barang where stok_current != ?', [0]);
+        return view('Dokter.form_erm_dokter', compact([
+            'mt_pasien',
+            'riwayat',
+            'kunjungan',
+            'kode_kunjungan',
+            'mt_tarif',
+            'mt_stok'
         ]));
     }
-    public function simpanpemeriksaandokter(Request $request){
+    public function simpanpemeriksaandokter(Request $request)
+    {
         $data = json_decode($_POST['data'], true);
         $data2 = json_decode($_POST['data2'], true);
         $data3 = json_decode($_POST['data3'], true);
@@ -59,7 +68,7 @@ class DokterController extends MasterController
             $value =  $nama['value'];
             $dataSet[$index] = $value;
         }
-         foreach ($data2 as $nama2) {
+        foreach ($data2 as $nama2) {
             $index2 = $nama2['name'];
             $value2 = $nama2['value'];
             $dataSet2[$index2] = $value2;
@@ -67,7 +76,7 @@ class DokterController extends MasterController
                 $arraytarif[] = $dataSet2;
             }
         }
-         foreach ($data3 as $nama3) {
+        foreach ($data3 as $nama3) {
             $index3 = $nama3['name'];
             $value3 = $nama3['value'];
             $dataSet3[$index3] = $value3;
@@ -75,9 +84,7 @@ class DokterController extends MasterController
                 $arrayobat[] = $dataSet3;
             }
         }
-        dd($arrayobat);
-        // dd($arraytarif);
-        if(count($data2) > 0){
+        if (count($data3) > 0) {
             $kode_header = $this->get_layanan_header($id = 'RJ');
             $layanan_header = [
                 'kode_kunjungan' => $request->kode_kunjungan,
@@ -85,11 +92,50 @@ class DokterController extends MasterController
                 'status_layanan_header' => '1',
                 'status_pembayaran' => 0,
                 'tgl_entry' => $this->get_now(),
-                'pic' => auth()->user()->id
+                'pic' => auth()->user()->id,
+                'jenis' => 'OBAT'
+            ];
+            $headerobat = ts_layanan_header::create($layanan_header);
+            $total_header_obat = 0;
+            foreach ($arrayobat as $rr) {
+                if($rr['jenistarif'] == 0){
+                    $tarif = 0;
+                }else{
+                    $tarif = $rr['harga2'];
+                }
+                $layanan_detail = [
+                    'id_header' => $headerobat->id,
+                    'idlayanan' => $rr['kodestok'],
+                    'nama_layanan' => $rr['namabarang'],
+                    'tarif' => $rr['harga2'],
+                    'jenis' => 'OBAT',
+                    'status_layanan_detail' => '1',
+                    'total_tarif' => $tarif*$rr['qty'],
+                    'jumlah_layanan' => $rr['qty'],
+                    'aturan_pakai' => $rr['aturanpakai'],
+                    'jenistarif' => $rr['jenistarif']
+                ];
+                $totaltarif =$tarif*$rr['qty'];
+                ts_layanan_detail::create($layanan_detail);
+                $total_header_obat = $total_header_obat + $totaltarif;
+            }
+            ts_layanan_header::where('id', $headerobat->id)
+                ->update(['grand_total' => $total_header_obat]);
+        }
+        if (count($data2) > 0) {
+            $kode_header = $this->get_layanan_header($id = 'RJ');
+            $layanan_header = [
+                'kode_kunjungan' => $request->kode_kunjungan,
+                'kode_layanan_header' => $kode_header,
+                'status_layanan_header' => '1',
+                'status_pembayaran' => 0,
+                'tgl_entry' => $this->get_now(),
+                'pic' => auth()->user()->id,
+                'jenis' => 'LAYANAN'
             ];
             $header = ts_layanan_header::create($layanan_header);
             $total_header = 0;
-            foreach($arraytarif as $r){
+            foreach ($arraytarif as $r) {
                 $layanan_detail = [
                     'id_header' => $header->id,
                     'idlayanan' => $r['idtarif'],
@@ -98,12 +144,15 @@ class DokterController extends MasterController
                     'jenis' => 'TARIF LAYANAN',
                     'status_layanan_detail' => '1',
                     'total_tarif' => $r['harga2'],
+                    'jumlah_layanan' => 1,
+                    'aturan_pakai' => '',
+                    'jenistarif' => 1
                 ];
                 ts_layanan_detail::create($layanan_detail);
                 $total_header = $total_header + $r['harga2'];
             }
             ts_layanan_header::where('id', $header->id)
-            ->update(['grand_total' => $total_header]);
+                ->update(['grand_total' => $total_header]);
         }
         $dataSet['status_pemeriksaan'] = 1;
         ts_kunjungan::where('kode_kunjungan', $request->kode_kunjungan)
@@ -118,8 +167,8 @@ class DokterController extends MasterController
     public function ambilriwayatbilling(Request $request)
     {
         $kode_kunjungan = $request->kode_kunjungan;
-        $ts_layanan = db::select('select *,b.id as iddetail from ts_layanan_header a inner join ts_layanan_detail b on a.id = b.id_header where a.kode_kunjungan = ? and b.status_layanan_detail = 1',[$kode_kunjungan]);
-        return view('Dokter.riwayat_billing',compact([
+        $ts_layanan = db::select('select *,b.id as iddetail from ts_layanan_header a inner join ts_layanan_detail b on a.id = b.id_header where a.kode_kunjungan = ? and b.status_layanan_detail = 1', [$kode_kunjungan]);
+        return view('Dokter.riwayat_billing', compact([
             'ts_layanan'
         ]));
     }
@@ -139,6 +188,6 @@ class DokterController extends MasterController
             $kd = "001";
         }
         date_default_timezone_set('Asia/Jakarta');
-        return $kode .str_replace('-','',$this->get_date()). $kd;
+        return $kode . str_replace('-', '', $this->get_date()) . $kd;
     }
 }
