@@ -16,7 +16,7 @@
             <td>{{ $p->nama_pasien}}</td>
             <td>{{ $p->jenis_kelamin}}</td>
             <td>{{ $p->TGL_LAHIR}}</td>
-            <td>{{ $p->desa}}, {{ $p->alamat }}</td>
+            <td>{{ $p->alamat }}</td>
             <td>
                 <button class="btn btn-warning"><i class="bi bi-pencil-square"></i></button>
                 <button rm="{{ $p->no_rm }}" class="btn btn-success pendaftaran"><i class="bi bi-box-arrow-in-right"></i></button>

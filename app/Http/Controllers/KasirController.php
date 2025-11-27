@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ts_kasir_retur_detail;
+use App\Models\ts_kasir_retur_header;
 use Illuminate\Http\Request;
 use App\Models\ts_kunjungan;
 use App\Models\ts_layanan_detail;
@@ -34,7 +36,7 @@ class KasirController extends MasterController
     {
         $tglawal = $request->tglawal;
         $tglakhir = $request->tglakhir;
-        $datakasir = db::select('select *,date(b.tgl_entry) as tgll from ts_kunjungan a inner join ts_transaksi_kasir_header b on a.kode_kunjungan = b.kode_kunjungan where date(b.tgl_entry) between ? and ? AND a.statuskunjungan != ? and b.status_pembayaran = ?', [$tglawal, $tglakhir,3,1]);
+        $datakasir = db::select('select *,date(b.tgl_entry) as tgll,b.id as idkasirheader,c.namapasien,b.status_pembayaran as spk from ts_kunjungan a inner join ts_transaksi_kasir_header b on a.kode_kunjungan = b.kode_kunjungan inner join mt_pasien c on a.no_rm = c.no_rm where date(b.tgl_entry) between ? and ? AND a.statuskunjungan != ? and b.status_pembayaran > ?', [$tglawal, $tglakhir, 3, 0]);
         return view('Kasir.tabel_riwayat_pembayaran', compact([
             'datakasir'
         ]));
@@ -43,10 +45,62 @@ class KasirController extends MasterController
     {
         $tglawal = $request->tglawal;
         $tglakhir = $request->tglakhir;
-        $dataheader = db::select('select * from ts_kunjungan a inner join mt_pasien b on a.no_rm = b.no_rm where date(a.tglentry) between ? and ? AND a.statuskunjungan = ?', [$tglawal, $tglakhir,1]);
+        $dataheader = db::select('select * from ts_kunjungan a inner join mt_pasien b on a.no_rm = b.no_rm where date(a.tglentry) between ? and ? AND a.statuskunjungan = ?', [$tglawal, $tglakhir, 1]);
         return view('Kasir.tabel_data_kunjungan', compact([
             'dataheader'
         ]));
+    }
+    public function ambildetailpembayaran(Request $request)
+    {
+        $idkasirheader  = $request->idkasirheader;
+        $detail = db::select('select *,a.status_pembayaran as spk from ts_transaksi_kasir_header a inner join ts_transaksi_kasir_detail b on a.id = b.id_kasir_header where a.id  = ?', [$idkasirheader]);
+        return view('Kasir.detail_pembayaran', compact([
+            'detail',
+            'idkasirheader'
+        ]));
+    }
+    public function batalpembayaran(Request $request)
+    {
+        $idpembayaran = $request->idpembayaran;
+        $header = db::select('select * from ts_transaksi_kasir_header where id = ?', [$idpembayaran]);
+        $kode_kunjungan = $header[0]->kode_kunjungan;
+        $detail = db::select('select * from ts_transaksi_kasir_detail where id_kasir_header = ?', [$idpembayaran]);
+        $kodeh = $this->get_kasir_retur_header();
+        $retur_header = [
+            'id_kasir_header' => $idpembayaran,
+            'kode_kunjungan' => $kode_kunjungan,
+            'total_retur' => $header[0]->total_tagihan,
+            'kode_retur_header' => $kodeh,
+            'pic' => auth()->user()->id,
+            'tgl_entry' => $this->get_now()
+        ];
+        $trh = ts_kasir_retur_header::create($retur_header);
+        foreach ($detail as $d) {
+            $detail = [
+                'id_retur_header' => $trh->id,
+                'id_layanan_header' => $d->idlayananheader,
+                'id_layanan_detail' => $d->idlayanandetail,
+                'id_tarif' => $d->id_tarif,
+                'nama_tarif' => $d->nama_layanan,
+                'total_layanan' => $d->total_layanan
+            ];
+            ts_kasir_retur_detail::create($detail);
+            ts_transaksi_kasir_detail::where('id', $d->id)
+            ->update(['status_pembayaran' => 3]);
+            ts_layanan_header::where('id', $d->idlayananheader)
+            ->update(['status_pembayaran' => 0]);
+        }
+        ts_transaksi_kasir_header::where('id', $idpembayaran)
+            ->update(['status_pembayaran' => 3]);
+        ts_kunjungan::where('kode_kunjungan', $kode_kunjungan)
+            ->update(['statuskunjungan' => 1]);
+
+        $data2 = [
+            'kode' => 200,
+            'message' => 'Pembayaran berhasil diretur !'
+        ];
+        echo json_encode($data2);
+        die;
     }
     public function ambildatabilling(Request $request)
     {
@@ -57,10 +111,26 @@ class KasirController extends MasterController
     public function detailbilling2(Request $request)
     {
         $kode_kunjungan  = $request->kodekunjungan;
-        $data_layanan = db::select('select * from ts_layanan_header a inner join ts_layanan_detail b on a.id = b.id_header where a.kode_kunjungan = ? and a.status_layanan_header = ? and b.status_layanan_detail = ? and a.status_pembayaran = 0', [$kode_kunjungan, 1, 1]);
+        $data_layanan = db::select('select * from ts_layanan_header a inner join ts_layanan_detail b on a.id = b.id_header where a.kode_kunjungan = ? and a.status_layanan_header = ? and b.status_layanan_detail = ? and a.status_pembayaran = 0 and b.status_order = 1', [$kode_kunjungan, 1, 1]);
         return view('Kasir.tabel_detail_billing', compact([
             'data_layanan'
         ]));
+    }
+    public function batalsemualayanan(Request $request)
+    {
+        $kode_kunjungan = $request->kodekunjungan;
+        $header = db::select('select * from ts_layanan_header where kode_kunjungan = ? and status_layanan_header = ? and status_pembayaran = ?', [$kode_kunjungan, 1, 0]);
+        foreach ($header as $h) {
+            $idheader = $h->id;
+            ts_layanan_header::where('id', $idheader)->update(['status_layanan_header' => 3]);
+            ts_layanan_detail::where('id_header', $idheader)->update(['status_layanan_detail' => 3]);
+        }
+        $data2 = [
+            'kode' => 200,
+            'message' => 'Semua layanan berhasil dibatalkan !'
+        ];
+        echo json_encode($data2);
+        die;
     }
     public function hitungpembayaran(Request $request)
     {
@@ -72,7 +142,7 @@ class KasirController extends MasterController
             return view('Kasir.error');
         }
         $KODE = $this->get_kasir_header();
-        $data_layanan = db::select('select *,b.id as id_detail from ts_layanan_header a inner join ts_layanan_detail b on a.id = b.id_header where a.kode_kunjungan = ? and b.status_layanan_detail = ? and a.status_layanan_header = ?', [$kode_kunjungan, 1, 1]);
+        $data_layanan = db::select('select *,b.id as id_detail from ts_layanan_header a inner join ts_layanan_detail b on a.id = b.id_header where a.kode_kunjungan = ? and b.status_layanan_detail = ? and a.status_layanan_header = ? and b.status_order = 1 and a.status_pembayaran = ?', [$kode_kunjungan, 1, 1, 0]);
         $data_header = [
             'kode_kunjungan' => $kode_kunjungan,
             'kode_pembayaran' => $KODE,
@@ -122,15 +192,15 @@ class KasirController extends MasterController
     {
         $id = $request->kode;
         ts_transaksi_kasir_header::where('id', $id)->update(['status_pembayaran' => 1]);
-        $detail = db::select('select * from ts_transaksi_kasir_detail where id_kasir_header = ?',[$id]);
-        foreach($detail as $dd){
+        $detail = db::select('select * from ts_transaksi_kasir_detail where id_kasir_header = ?', [$id]);
+        foreach ($detail as $dd) {
             $id_layanan_header = $dd->idlayananheader;
             ts_layanan_header::where('id', $id_layanan_header)->update(['status_pembayaran' => 1]);
-        }        
-        $dc = db::select('select * from ts_transaksi_kasir_header where id = ?',[$id]);
+        }
+        $dc = db::select('select * from ts_transaksi_kasir_header where id = ?', [$id]);
         $kode_kunjungan = $dc[0]->kode_kunjungan;
-        $cek_layanan_header = db::select('select * from ts_layanan_header where kode_kunjungan = ? and status_pembayaran = ?',[$kode_kunjungan,0]);
-        if(count($cek_layanan_header) == 0){
+        $cek_layanan_header = db::select('select * from ts_layanan_header where kode_kunjungan = ? and status_pembayaran = ? and status_layanan_header = ?', [$kode_kunjungan, 0, 1]);
+        if (count($cek_layanan_header) == 0) {
             ts_kunjungan::where('kode_kunjungan', $kode_kunjungan)->update(['statuskunjungan' => 2]);
         }
         $data2 = [
@@ -157,5 +227,23 @@ class KasirController extends MasterController
         }
         date_default_timezone_set('Asia/Jakarta');
         return 'KSR' . str_replace('-', '', $this->get_date()) . $kd;
+    }
+    public function get_kasir_retur_header()
+    {
+        $q = DB::select('SELECT id,RIGHT(kode_retur_header,3) AS kd_max  FROM ts_retur_kasir_header
+        WHERE date(tgl_entry) = ?
+        ORDER BY id DESC
+        LIMIT 1', [$this->get_date()]);
+        $kd = "";
+        if (count($q) > 0) {
+            foreach ($q as $k) {
+                $tmp = ((int) $k->kd_max) + 1;
+                $kd = sprintf("%03s", $tmp);
+            }
+        } else {
+            $kd = "001";
+        }
+        date_default_timezone_set('Asia/Jakarta');
+        return 'RET' . str_replace('-', '', $this->get_date()) . $kd;
     }
 }

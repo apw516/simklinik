@@ -1,31 +1,32 @@
-
 <button class="btn btn-danger mb-3" onclick="kembali()"><i class="bi bi-backspace-fill"></i> Kembali</button>
-<input hidden type="text" id="kode_kunjungan" value="{{ $kode_kunjungan}}">
+<input hidden type="text" id="kode_kunjungan" value="{{ $kode_kunjungan }}">
 <div class="card">
     <div class="card-header">Detail Billing
         <table class="mt-3">
             <tr>
                 <td>Nomor RM</td>
-                <td> : {{ $ts_kunjungan[0]->no_rm}}</td>
+                <td> : {{ $ts_kunjungan[0]->no_rm }}</td>
             </tr>
             <tr>
                 <td>Nama Pasien</td>
-                <td> : {{ $ts_kunjungan[0]->namapasien}}</td>
+                <td> : {{ $ts_kunjungan[0]->namapasien }}</td>
             </tr>
             <tr>
                 <td>Unit</td>
-                <td> : {{ $ts_kunjungan[0]->unit}}</td>
+                <td> : {{ $ts_kunjungan[0]->unit }}</td>
             </tr>
         </table>
     </div>
     <div class="card-body">
         <div class="v_detail">
 
-        </div>       
+        </div>
     </div>
     <div class="card-footer">
-        <button class="btn btn-success float-end ms-1 me-1 btnterima" onclick="terima()"><i class="bi bi-cloud-download-fill"></i> Terima </button>
-        <button class="btn btn-danger float-end ms-1 me-1 btnretur"><i class="bi bi-x"></i> Retur </button>
+        <button class="btn btn-success float-end ms-1 me-1 btnterima" onclick="terima()"><i
+                class="bi bi-cloud-download-fill"></i> Terima </button>
+        <button class="btn btn-danger float-end ms-1 me-1 btnretur" onclick="retursemua()"><i class="bi bi-x"></i> Retur
+        </button>
     </div>
 </div>
 
@@ -35,15 +36,19 @@
         <div class="row">
             <div class="col-md-2">
                 <label for="">Total Tagihan</label>
-                <input readonly type="text" id="totaltagihan" readonly class="form-control" placeholder="Total tagihan ...">
-                <input hidden type="text" id="totaltagihan2" readonly class="form-control" placeholder="Total tagihan ...">
+                <input readonly type="text" id="totaltagihan" readonly class="form-control"
+                    placeholder="Total tagihan ...">
+                <input hidden type="text" id="totaltagihan2" readonly class="form-control"
+                    placeholder="Total tagihan ...">
             </div>
             <div class="col-md-3">
                 <label for="">Uang yang diberikan</label>
-                <input type="text" id="uangbayar" class="form-control" placeholder="Masukan uang yang diberikan pasien ..." value="0">
+                <input type="text" id="uangbayar" class="form-control"
+                    placeholder="Masukan uang yang diberikan pasien ..." value="0">
             </div>
             <div class="col-md-3">
-                <button class="btn btn-success btnhitung" style="margin-top:26px" onclick="hitungpembayaran()"><i class="bi bi-cloud-download-fill"></i> Proses ...</button>
+                <button class="btn btn-success btnhitung" style="margin-top:26px" onclick="hitungpembayaran()"><i
+                        class="bi bi-cloud-download-fill"></i> Proses ...</button>
             </div>
         </div>
         <div class="v_nota_pembayaran">
@@ -52,58 +57,120 @@
     </div>
 </div>
 <script>
-     $(document).ready(function() {
-            ambildetail()
-     })
-    function ambildetail()
-    {
+    $(document).ready(function() {
+        ambildetail()
+    })
+
+    function ambildetail() {
         kodekunjungan = $('#kode_kunjungan').val()
         spinner = $('#loader')
         spinner.show();
-            $.ajax({
-                type: 'post'
-                , data: {
-                    _token: "{{ csrf_token() }}"
-                    , kodekunjungan
-                }
-                , url: '<?= route('detailbilling2') ?>'
-                , success: function(response) {
-                    spinner.hide();
-                    $('.v_detail').html(response);
-                }
-            });
+        $.ajax({
+            type: 'post',
+            data: {
+                _token: "{{ csrf_token() }}",
+                kodekunjungan
+            },
+            url: '<?= route('detailbilling2') ?>',
+            success: function(response) {
+                spinner.hide();
+                $('.v_detail').html(response);
+            }
+        });
     }
-    function terima()
-    {
+
+    function terima() {
         total = $('#grandtotalbilling2').val()
         total2 = $('#grandtotalbilling').val()
-        $('.v_pembayaran').removeAttr('hidden',true)
+        $('.v_pembayaran').removeAttr('hidden', true)
         $('#totaltagihan').val(total)
         $('#totaltagihan2').val(total2)
     }
-    function hitungpembayaran()
-    {
-       kodekunjungan = $('#kode_kunjungan').val()
-       tagihan = $('#totaltagihan2').val()
-       uangbayar = $('#uangbayar').val()
+
+    function hitungpembayaran() {
+        kodekunjungan = $('#kode_kunjungan').val()
+        tagihan = $('#totaltagihan2').val()
+        uangbayar = $('#uangbayar').val()
         spinner = $('#loader')
         spinner.show();
-       spinner = $('#loader')
+        spinner = $('#loader')
         spinner.show();
         $.ajax({
-            type: 'post'
-            , data: {
-                _token: "{{ csrf_token() }}"
-                , kodekunjungan,tagihan,uangbayar
-            }
-            , url: '<?= route('hitungpembayaran') ?>'
-            , success: function(response) {
+            type: 'post',
+            data: {
+                _token: "{{ csrf_token() }}",
+                kodekunjungan,
+                tagihan,
+                uangbayar
+            },
+            url: '<?= route('hitungpembayaran') ?>',
+            success: function(response) {
                 spinner.hide();
                 $('.v_nota_pembayaran').html(response);
-                $('.btnhitung').attr('disabled',true)
-                $('.btnterima').attr('disabled',true)
-                $('.btnretur').attr('disabled',true)               
-                $('#uangbayar').attr('readonly',true)
+                $('.btnhitung').attr('disabled', true)
+                $('.btnterima').attr('disabled', true)
+                $('.btnretur').attr('disabled', true)
+                $('#uangbayar').attr('readonly', true)
+            }
+        });
+    }
+
+    function retursemua() {
+        Swal.fire({
+            title: "Anda yakin ?",
+            text: "Data semua layanan yang belum dibayar akan diretur !",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya retur ..."
+        }).then((result) => {
+            if (result.isConfirmed) {
+                retursemua2()
+            }
+        });
+    }
+
+    function retursemua2() {
+        kodekunjungan = $('#kode_kunjungan').val()
+        spinner = $('#loader')
+        spinner.show();
+        $.ajax({
+            async: true,
+            type: 'post',
+            dataType: 'json',
+            data: {
+                _token: "{{ csrf_token() }}",
+                kodekunjungan
+            },
+            url: '<?= route('batalsemualayanan') ?>',
+            error: function(data) {
+                spinner.hide()
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ooops....',
+                    text: 'Sepertinya ada masalah......',
+                    footer: ''
+                })
+            },
+            success: function(data) {
+                spinner.hide()
+                if (data.kode == 500) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oopss...',
+                        text: data.message,
+                        footer: ''
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'OK',
+                        text: data.message,
+                        footer: ''
+                    })
+                    ambildetail()
+                }
             }
         });
     }

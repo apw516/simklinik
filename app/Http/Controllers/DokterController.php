@@ -23,10 +23,12 @@ class DokterController extends MasterController
     public function caridiagnosa(Request $request)
     {
         $term = $request->get('term');
-        $results = icd10::where('nama', 'LIKE', '%' . $term . '%')
-            ->select('diag as value', 'nama as label') // Adjust based on your model's columns
-            ->get();
-        return response()->json($results);
+        if (strlen($term) > 3) {
+            $results = icd10::where('nama', 'LIKE', '%' . $term . '%')
+                ->select('diag as value', 'nama as label') // Adjust based on your model's columns
+                ->get();
+            return response()->json($results);
+        }
     }
     public function caripasiendokter(Request $request)
     {
@@ -84,6 +86,8 @@ class DokterController extends MasterController
                 $arrayobat[] = $dataSet3;
             }
         }
+            $kode_kunjungan = $request->kode_kunjungan;
+            $cek_ts_kunjungan = db::select('select * from ts_kunjungan where kode_kunjungan = ?',[$kode_kunjungan]);
         if (count($data3) > 0) {
             $kode_header = $this->get_layanan_header($id = 'RJ');
             $layanan_header = [
@@ -98,9 +102,9 @@ class DokterController extends MasterController
             $headerobat = ts_layanan_header::create($layanan_header);
             $total_header_obat = 0;
             foreach ($arrayobat as $rr) {
-                if($rr['jenistarif'] == 0){
+                if ($rr['jenistarif'] == 0) {
                     $tarif = 0;
-                }else{
+                } else {
                     $tarif = $rr['harga2'];
                 }
                 $layanan_detail = [
@@ -110,17 +114,22 @@ class DokterController extends MasterController
                     'tarif' => $rr['harga2'],
                     'jenis' => 'OBAT',
                     'status_layanan_detail' => '1',
-                    'total_tarif' => $tarif*$rr['qty'],
+                    'total_tarif' => $tarif * $rr['qty'],
                     'jumlah_layanan' => $rr['qty'],
                     'aturan_pakai' => $rr['aturanpakai'],
-                    'jenistarif' => $rr['jenistarif']
+                    'jenistarif' => $rr['jenistarif'],
+                    'status_order' => 0
                 ];
-                $totaltarif =$tarif*$rr['qty'];
+                $totaltarif = $tarif * $rr['qty'];
                 ts_layanan_detail::create($layanan_detail);
                 $total_header_obat = $total_header_obat + $totaltarif;
             }
             ts_layanan_header::where('id', $headerobat->id)
                 ->update(['grand_total' => $total_header_obat]);
+                if($cek_ts_kunjungan[0]->statuskunjungan == 2){
+                $status_kunjungan = 1;
+                   ts_kunjungan::where('kode_kunjungan', $request->kode_kunjungan)->update(['statuskunjungan' => $status_kunjungan]);
+            }
         }
         if (count($data2) > 0) {
             $kode_header = $this->get_layanan_header($id = 'RJ');
@@ -146,13 +155,18 @@ class DokterController extends MasterController
                     'total_tarif' => $r['harga2'],
                     'jumlah_layanan' => 1,
                     'aturan_pakai' => '',
-                    'jenistarif' => 1
+                    'jenistarif' => 1,
+                    'status_order' => 1
                 ];
                 ts_layanan_detail::create($layanan_detail);
                 $total_header = $total_header + $r['harga2'];
             }
             ts_layanan_header::where('id', $header->id)
                 ->update(['grand_total' => $total_header]);
+            if($cek_ts_kunjungan[0]->statuskunjungan == 2){
+                $status_kunjungan = 1;
+                   ts_kunjungan::where('kode_kunjungan', $request->kode_kunjungan)->update(['statuskunjungan' => $status_kunjungan]);
+            }
         }
         $dataSet['status_pemeriksaan'] = 1;
         ts_kunjungan::where('kode_kunjungan', $request->kode_kunjungan)
@@ -171,6 +185,30 @@ class DokterController extends MasterController
         return view('Dokter.riwayat_billing', compact([
             'ts_layanan'
         ]));
+    }
+    public function batallayanan(Request $request)
+    {
+        $id = $request->id;
+        $detail = db::select('select * from ts_layanan_detail where id = ?', [$id]);
+        $header = db::select('select * from ts_layanan_header where id = ?', [$detail[0]->id_header]);
+        ts_layanan_detail::where('id', $id)
+            ->update(['status_layanan_detail' => 3]);
+        $gtheader = $header[0]->grand_total;
+        $hrgadetail = $detail[0]->total_tarif;
+        $newgt = $gtheader - $hrgadetail;
+        if ($newgt == 0) {
+            $statusheader = 3;
+        } else {
+            $statusheader = 1;
+        }
+        ts_layanan_header::where('id', $detail[0]->id_header)
+            ->update(['grand_total' => $newgt, 'status_layanan_header' => $statusheader]);
+        $data2 = [
+            'kode' => 200,
+            'message' => 'Layanan berhasil diretur ...'
+        ];
+        echo json_encode($data2);
+        die;
     }
     public function get_layanan_header($kode)
     {

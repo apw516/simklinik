@@ -1,6 +1,6 @@
-<table id="tabelriwayatkunjungan" class="table table-sm table-bordered" style="font-size: 12px">
+<table id="tabelriwayatkunjungan2" class="table table-sm table-bordered" style="font-size: 12px">
     <thead>
-        <th>Kode Kunjungan </th>
+        <th>Kunjungan ke </th>
         <th>RM </th>
         <th>Nama </th>
         <th>Kunjungan ke - </th>
@@ -13,7 +13,7 @@
     <tbody>
         @foreach ($riwayat as $r )
         <tr>
-            <td>{{ $r->kode_kunjungan}}</td>
+            <td>{{ $r->counter}}</td>
             <td>{{ $r->no_rm}}</td>
             <td>{{ $r->namapasien}}</td>
             <td>{{ $r->counter}}</td>
@@ -31,7 +31,7 @@
 </table>
 <script>
     $(function() {
-        $("#tabelriwayatkunjungan").DataTable({
+        $("#tabelriwayatkunjungan2").DataTable({
             "responsive": true
             , "lengthChange": false
             , "autoWidth": false

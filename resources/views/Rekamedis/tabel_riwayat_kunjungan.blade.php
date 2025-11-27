@@ -9,11 +9,11 @@
     <tbody>
         @foreach ($riwayat as $r )
         <tr>
-            <td>@if($r->statuskunjungan == 1) <button unit="{{ $r->unit }}" tgl="{{$r->tanggalkunjungan}}" kodekunjungan="{{ $r->kode_kunjungan }}" class="badge bg-danger btn-sm batalkunjungan"> x </button> @endif {{ $r->counter}}</td>
+            <td>@if($r->statuskunjungan == 1) @if($r->status_pemeriksaan == 0) <button unit="{{ $r->unit }}" tgl="{{$r->tanggalkunjungan}}" kodekunjungan="{{ $r->kode_kunjungan }}" class="badge bg-danger btn-sm batalkunjungan"> x </button> @endif @endif {{ $r->counter}}</td>
             <td>{{ $r->unit}}</td>
             <td>{{ $r->namadokter}}</td>
             <td>{{ $r->tanggalkunjungan}}</td>
-            <td>@if($r->statuskunjungan == 1)<button unit="{{ $r->unit }}" tgl="{{$r->tanggalkunjungan}}"  kodekunjungan="{{ $r->kode_kunjungan }}" class="badge bg-success btn-sm tutupkunjungan"> v </button> Aktif @elseif($r->statuskunjungan == 2) Selesai @endif</td>
+            <td>@if($r->statuskunjungan == 1) @if($r->status_pemeriksaan == 0)<button unit="{{ $r->unit }}" tgl="{{$r->tanggalkunjungan}}"  kodekunjungan="{{ $r->kode_kunjungan }}" class="badge bg-success btn-sm tutupkunjungan"> v </button> @endif Aktif @if($r->status_pemeriksaan == 1) | Sudah diperiksa dokter @endif @elseif ($r->statuskunjungan == 2) Selesai @endif</td>
         </tr>
         @endforeach
     </tbody>

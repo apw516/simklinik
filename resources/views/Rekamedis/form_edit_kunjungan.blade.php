@@ -8,7 +8,7 @@
     <div class="card-body">
         <div class="form-group">
             <label for="exampleFormControlSelect1">Status Kunjungan</label>
-            <select class="form-control" id="statuskunjungan" name="statuskunjungan">
+            <select @if($ts_kunjungan[0]->status_pemeriksaan == 1) disabled @endif class="form-control" id="statuskunjungan" name="statuskunjungan">
                 <option @if($ts_kunjungan[0]->statuskunjungan == 1) selected @endif>Aktif</option>
                 <option @if($ts_kunjungan[0]->statuskunjungan == 2) selected @endif>Selesai</option>
                 <option @if($ts_kunjungan[0]->statuskunjungan == 3) selected @endif>Batal</option>
