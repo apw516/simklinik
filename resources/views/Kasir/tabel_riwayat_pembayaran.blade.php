@@ -23,13 +23,23 @@
                 <td>Rp. {{ number_format($d->uang_diterima, 0, ',', '.') }}</td>
                 <td>Rp. {{ number_format($d->kembalian, 0, ',', '.') }}</td>
                 <td>
-                    @if($d->spk == 3) Retur @else Aktif @endif
+                    @if ($d->spk == 3)
+                        Retur
+                    @elseif($d->spk == 0)
+                        Belum dibayar
+                    @else
+                        Aktif
+                    @endif
                 </td>
                 <td>
                     <button class="badge bg-info text-dark"><i class="bi bi-printer"></i></button>
                     <button class="badge bg-warning text-dark detailpembayaran" data-bs-toggle="modal"
                         data-bs-target="#modaldetailbayar" idkasirheader="{{ $d->idkasirheader }}"><i
                             class="bi bi-list-columns-reverse"></i></button>
+                    @if ($d->spk == 0)
+                        <button class="badge bg-success text-dark bayar" idkasirheader="{{ $d->idkasirheader }}"><i
+                                class="bi bi-life-preserver"></i></button>
+                    @endif
                 </td>
             </tr>
         @endforeach
@@ -82,3 +92,40 @@
             }
         });
     });
+    $(".bayar").on('click', function(event) {
+        Swal.fire({
+            title: "Apakah tagihan sudah dibayar ?",
+            text: "Ya layanan sudah dibayar !",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya bayar ..."
+        }).then((result) => {
+            if (result.isConfirmed) {
+                idkasirheader = $(this).attr('idkasirheader')
+                bayar(idkasirheader)
+            }
+        });
+    })
+    function bayar(idkasirheader)
+    {
+         spinner = $('#loader')
+         spinner.show();
+         $.ajax({
+             type: 'post',
+             data: {
+                 _token: "{{ csrf_token() }}",
+                 idkasirheader
+             },
+             url: '<?= route('bayarlayananheader') ?>',
+             error: function(response) {
+                 spinner.hide();
+                 alert('error')
+             },
+             success: function(response) {
+                 spinner.hide();
+                 location.reload()
+             }
+         });
+    }

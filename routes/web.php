@@ -97,6 +97,8 @@ Route::post('/batalbayar', [KasirController::class, 'batalbayar'])->name('batalb
 Route::post('/simpanpembayaran', [KasirController::class, 'simpanpembayaran'])->name('simpanpembayaran');
 Route::post('/batalsemualayanan', [KasirController::class, 'batalsemualayanan'])->name('batalsemualayanan');
 Route::post('/batalpembayaran', [KasirController::class, 'batalpembayaran'])->name('batalpembayaran');
+Route::post('/returlayanandetail', [KasirController::class, 'returlayanandetail'])->name('returlayanandetail');
+Route::post('/bayarlayananheader', [KasirController::class, 'bayarlayananheader'])->name('bayarlayananheader');
 
 
 
